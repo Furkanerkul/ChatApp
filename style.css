@@ -83,6 +83,7 @@ body .mesajGonder input{
     margin-top: 30px;
 }
 
+
 body .mesajGonder input{
     width: 80%;
     border-width: 1px;
@@ -117,3 +118,4 @@ body input[type="text"]{
 body button{
     padding: 10px;
 }
+
