@@ -1,0 +1,115 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    position: relative;
+}
+
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+body .sohbetAlan{
+    height: 600px;
+    width: 800px;
+    display: none;
+    border-radius: 30px;
+    background-color: #36C2CE;
+}
+
+.atilanMesajlar{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.atilanMesajlar div{
+    text-align: left;
+}
+
+body .sohbetGecmisi{
+    height: 500px;
+    width: 90%;
+    background-color: white;
+    top: 20px;
+    border-radius: 30px;
+    overflow: auto;
+}
+
+body .sohbetGecmisi div{
+    float: left;
+    padding: 20px;
+}
+
+body .atilanMesajlar div{
+    padding: 0px;
+}
+
+body .userName button{
+    background-color: #478CCF;
+    border-color: transparent;
+    color: white;
+    border-radius: 10px;
+}
+
+body .userName input{
+    border-radius: 10px;
+    border-width: 1px;
+}
+
+
+body .mesajGonder input{
+    margin-top: 30px;
+}
+
+body .mesajGonder input{
+    width: 80%;
+    border-width: 1px;
+    border-radius: 20px;
+}
+
+body .mesajGonder button{
+    right: 39px;
+    border-width: 1px;
+    border-color: transparent;
+    bottom: 0px;
+    padding: 7px;
+    border-radius: 20px;
+}
+
+body .mesajGonder button:hover{
+    background-color: #134B70;
+    transition: 0.50s ease;
+    cursor: pointer;
+    color: white;
+}
+
+body .content{
+    top: 100px;
+}
+
+body input[type="text"]{
+    padding: 10px;
+    outline: none;
+}
+
+body button{
+    padding: 10px;
+}

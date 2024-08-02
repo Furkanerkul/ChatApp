@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/779bad2e7b.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Online Chat - BETA</title>
+</head>
+
+<body>
+    <center>
+        <div class="content">
+            <div class="userName">
+                <input type="text" placeholder="Kullanıcı Adı">
+                <button id="saveName">Tamam</button>
+            </div>
+            <div class="sohbetAlan">
+                <div class="sohbetGecmisi">
+                    <div class="atilanMesajlar">
+
+                    </div>
+                </div>
+                <div class="mesajGonder">
+                    <input type="text" id="mesaj" placeholder="Mesaj">
+                    <button id="mesajBtn"><i class="fa-solid fa-envelope"></i></button>
+                </div>
+                <h3 id="katilan"></h3>
+            </div>
+        </div>
+
+        </div>
+    </center>
+
+    <script type="module">
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+
+
+        const firebaseConfig = {
+            apiKey: "",
+            authDomain: "chatapp-910ce.firebaseapp.com",
+            projectId: "chatapp-910ce",
+            storageBucket: "chatapp-910ce.appspot.com",
+            messagingSenderId: "987591693708",
+            appId: "1:987591693708:web:e6c9b7b4539c43fa29b2a9"
+        };
+
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const mesajlarRef = collection(db, "mesajlar");
+        const katilanlar = collection(db, "katilanlar");
+
+        let isim = document.querySelector('input[type="text"]')
+        let mesaj = document.querySelector('body #mesaj')
+        let mesajBtn = document.querySelector('body #mesajBtn')
+        let timer = 0;
+
+
+        isim.addEventListener('keyup', function (checkKey) {
+            if (checkKey.key == 'Enter') {
+                document.querySelector('button').click();
+            }
+        })
+
+
+        mesaj.addEventListener('keyup', (tusKontrol) => {
+            if (tusKontrol.key == 'Enter') {
+                mesajBtn.click();
+            }
+        })
+
+        document.querySelector('#saveName').addEventListener('click', () => {
+            let getUsers = query(collection(db, "katilanlar"), where("kullaniciAdi", "==", isim.value));
+
+            getDocs(getUsers)
+                .then((querySnapshot) => {
+                    if (querySnapshot.empty) {
+                        // Belge yoksa yeni kullanıcı adı ekle
+                        addDoc(collection(db, "katilanlar"), {
+                            kullaniciAdi: isim.value,
+                            tarih: new Date()
+                        })
+                            .then((docRef) => {
+                                console.log("Belge ID'si ile yazıldı: ", docRef.id);
+                            })
+                            .catch((error) => {
+                                console.error("Belge eklerken hata oluştu: ", error);
+                            });
+
+                        document.querySelector('.userName').style.display = 'none'
+                        alert(`Kullanıcı adın: ${isim.value}`)
+                        document.querySelector('body .sohbetAlan').style.display = 'block'
+                    } else {
+                        // Kullanıcı adı zaten mevcut
+                        alert('Bu kullanıcı adı zaten var.');
+                    }
+                })
+                .catch((error) => {
+                    console.error("Hata oluştu: ", error);
+                });
+
+
+        })
+
+
+        mesajBtn.addEventListener('click', () => {
+            if (mesaj.value.length >= 1) {
+                if (timer == 0) {
+                    let chatTimer = setInterval(() => {
+                        timer++;
+                        if (timer == 5) {
+                            timer = 0;
+                            clearInterval(chatTimer)
+                        }
+                    }, 1000)
+
+                    addDoc(collection(db, "mesajlar"), {
+                        kullaniciAdi: isim.value,
+                        mesaj: mesaj.value,
+                        tarih: new Date()
+                    })
+                    document.querySelector('#mesaj').value = ''
+                        .then((docRef) => {
+                            console.log("Belge ID'si ile yazıldı: ", docRef.id);
+
+                        })
+                        .catch((error) => {
+                            console.error("Belge eklerken hata oluştu: ", error);
+                        });
+                } else {
+                    alert('5 saniye cooldown.')
+                }
+            }
+            else {
+                alert('Metin alanı boş.')
+            }
+        });
+
+
+        onSnapshot(mesajlarRef, (snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+                if (change.type === "added") {
+                    // Yeni bir mesaj eklendiğinde çalışacak kod
+                    document.querySelector('body .atilanMesajlar').insertAdjacentHTML('beforeend', `<div>${change.doc.data().kullaniciAdi}: ${change.doc.data().mesaj}</div>`)
+
+                }
+                if (change.type === "removed") {
+
+                }
+            });
+        });
+
+
+
+
+        onSnapshot(katilanlar, (snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+                if (change.type === "added") {
+                    // Yeni bir mesaj eklendiğinde çalışacak kod
+                    document.querySelector('body #katilan').textContent = `${change.doc.data().kullaniciAdi} sohbete katıldı.`
+                }
+                if (change.type === "removed") {
+
+                }
+            });
+        });
+
+
+
+
+    </script>
+</body>
+
+</html>
