@@ -123,9 +123,9 @@
                         mesaj: mesaj.value,
                         tarih: new Date()
                     })
-                    document.querySelector('#mesaj').value = ''
                         .then((docRef) => {
                             console.log("Belge ID'si ile yazıldı: ", docRef.id);
+                            document.querySelector('#mesaj').value = ''
 
                         })
                         .catch((error) => {
