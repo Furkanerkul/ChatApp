@@ -86,6 +86,7 @@
                         })
                             .then((docRef) => {
                                 console.log("Belge ID'si ile yazıldı: ", docRef.id);
+                                sessionStorage.setItem('userName',isim.value)
                             })
                             .catch((error) => {
                                 console.error("Belge eklerken hata oluştu: ", error);
@@ -146,7 +147,13 @@
                 if (change.type === "added") {
                     // Yeni bir mesaj eklendiğinde çalışacak kod
                     document.querySelector('body .atilanMesajlar').insertAdjacentHTML('beforeend', `<div>${change.doc.data().kullaniciAdi}: ${change.doc.data().mesaj}</div>`)
-
+                    for(let i = 0; i < document.querySelector('body .atilanMesajlar').children.length; i++){
+                        if(document.querySelectorAll('body .atilanMesajlar div')[i].textContent.startsWith(sessionStorage.getItem('userName'))){
+                        document.querySelectorAll('body .atilanMesajlar div')[i].style.backgroundColor = '#7FA1C3'
+                        document.querySelectorAll('body .atilanMesajlar div')[i].style.borderRadius = '20px'
+                        document.querySelectorAll('body .atilanMesajlar div')[i].style.padding = '10px'
+                    }
+                    }
                 }
                 if (change.type === "removed") {
 
