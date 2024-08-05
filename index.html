@@ -86,7 +86,8 @@
                         })
                             .then((docRef) => {
                                 console.log("Belge ID'si ile yazıldı: ", docRef.id);
-                                sessionStorage.setItem('userName',isim.value)
+                                localStorage.setItem('userName', isim.value)
+                                localStorage.setItem('erisim','basarili')
                             })
                             .catch((error) => {
                                 console.error("Belge eklerken hata oluştu: ", error);
@@ -120,7 +121,7 @@
                     }, 1000)
 
                     addDoc(collection(db, "mesajlar"), {
-                        kullaniciAdi: isim.value,
+                        kullaniciAdi: localStorage.getItem('userName'),
                         mesaj: mesaj.value,
                         tarih: new Date()
                     })
@@ -147,12 +148,13 @@
                 if (change.type === "added") {
                     // Yeni bir mesaj eklendiğinde çalışacak kod
                     document.querySelector('body .atilanMesajlar').insertAdjacentHTML('beforeend', `<div>${change.doc.data().kullaniciAdi}: ${change.doc.data().mesaj}</div>`)
-                    for(let i = 0; i < document.querySelector('body .atilanMesajlar').children.length; i++){
-                        if(document.querySelectorAll('body .atilanMesajlar div')[i].textContent.startsWith(sessionStorage.getItem('userName'))){
-                        document.querySelectorAll('body .atilanMesajlar div')[i].style.backgroundColor = '#7FA1C3'
-                        document.querySelectorAll('body .atilanMesajlar div')[i].style.borderRadius = '20px'
-                        document.querySelectorAll('body .atilanMesajlar div')[i].style.padding = '10px'
-                    }
+                    for (let i = 0; i < document.querySelector('body .atilanMesajlar').children.length; i++) {
+                        if (document.querySelectorAll('body .atilanMesajlar div')[i].textContent.startsWith(localStorage.getItem('userName'))) {
+                            document.querySelectorAll('body .atilanMesajlar div')[i].style.backgroundColor = '#7FA1C3'
+                            document.querySelectorAll('body .atilanMesajlar div')[i].style.borderRadius = '20px'
+                            document.querySelectorAll('body .atilanMesajlar div')[i].style.padding = '10px'
+                            document.querySelectorAll('body .atilanMesajlar div')[i].style.color = 'white'
+                        }
                     }
                 }
                 if (change.type === "removed") {
@@ -176,6 +178,16 @@
             });
         });
 
+        window.addEventListener('DOMContentLoaded', () => {
+            if(localStorage.getItem('erisim') == 'basarili'){
+            document.querySelector('body .userName').style.display = 'none'
+            document.querySelector('body .sohbetAlan').style.display = 'block'
+        }
+        else{
+            document.querySelector('body .userName').style.display = 'block'
+            document.querySelector('body .sohbetAlan').style.display = 'none'
+        }
+        })
 
     </script>
 </body>
